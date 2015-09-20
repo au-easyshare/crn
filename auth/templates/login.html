@@ -1,0 +1,32 @@
+{# vim: set tabstop=2 shiftwidth=2: backspace=2: #}
+{% extends "base.html" %}
+{% block title %}Login Page{% endblock %}
+
+{% block page %}
+<div class="container">
+  <form method="post" class="form form-horizontal" role="form">
+    <div style="display:none;"><input id="csrf_token" name="csrf_token" type="hidden" value="{{csrf_token}}"></div>
+    <div class="form-group ">
+      {{  form.username.label(class_='control-label  col-lg-2') }}
+      <div class=" col-lg-10">
+        {{ form.username(class_='form-control') }}
+      </div>
+    </div>
+    <div class="form-group ">
+      {{  form.password.label(class_='control-label  col-lg-2') }}
+      <div class=" col-lg-10">
+        {{ form.password(class_='form-control') }}
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-lg-offset-2 col-lg-10">
+        <input class="btn btn-primary" id="login_button" name="login_button" type="submit" value="Login">
+      </div>
+    </div>
+  </form>
+{% endblock %}
+
+{% block head %}
+{{super()}}
+{% endblock %}
+

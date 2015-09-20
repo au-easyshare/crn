@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Collect ABN{% endblock %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+<div class="container">
+    
+    <form method="post" class="form" role="form form-inline">
+        {{ form.csrf_token }}
+        <div class="form-group ">
+            {{ form.abn.label() }}:
+            {{ form.abn(class_="form-control abn-check") }}
+        </div>
+        <div class="form-group ">
+            {{ form.name(class_="form-control") }}
+        </div>
+        <div class="form-group ">
+        {{ form.submit_button(class_="btn btn-default") }}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+    <script>
+    // GET /ABRXMLSearch.asmx/SearchByABNv201408?searchString=string&includeHistoricalDetails=string&authenticationGuid=string HTTP/1.1
+    var query_uri = 'experiments/check_abn?searchString='
+    $(".abn-check").focusout(function() {
+        console.log("out '" + query_uri + $(this).val() + "'");
+        if ($(this).val() == "")
+            return true;
+        $.ajax({
+            url: query_uri +  $(this).val(),
+            jsonp: "callback",
+            dataType: "jsonp",
+            success: function(data) {
+                console.log("result" + data.businessEntity.businessName.organisationName);
+                var be = data.businessEntity
+                var val;
+                if (Object.prototype.hasOwnProperty.call(be, 'mainTradingName'))
+                    val = be.mainTradingName.organisationName;
+                else if (Object.prototype.hasOwnProperty.call(be, 'mainName'))
+                    val = be.mainName.organisationName;
+                else if (Object.prototype.hasOwnProperty.call(be, 'businessName'))
+                    val = be.businessName.organisationName;
+                else if (Object.prototype.hasOwnProperty.call(be, 'otherTradingName'))
+                    val = be.businessName.otherTradingName;
+                else if (Object.prototype.hasOwnProperty.call(be, 'legalName'))
+                    val = be.businessName.legalName ;
+                else
+                    $('#name').val('ACN (not mainTradingName mainName businessName');
+                $('#name').val(val);
+            },
+            error: function(data) {
+                $('#name').val(JSON.parse(data.responseText).description.error);
+            }
+
+        });
+      });
+    </script>
+{% endblock page_scripts %}
+

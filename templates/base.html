@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {%- block head %}
+    <title>{% block title %}{% endblock title %}</title>
+
+    {%- block metas %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {%- endblock metas %}
+
+    {%- block styles %}
+        <link href="{{'bootstrap.css'|find_resource}}" rel="stylesheet">
+        <link href="{{'bootstrap-submenu.css'|find_resource}}" rel="stylesheet">
+        {# <link href="{{'font-awesome.css'|find_resource}}" rel="stylesheet"> #}
+    {%- block page_styles %}
+    {%- endblock page_styles %}
+    {%- endblock styles %}
+
+    {%- endblock head %}
+    {#    <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-61121565-1', 'auto');
+        ga('send', 'pageview');
+
+    </script> #}
+  </head>
+  <body>
+    {% block body -%}
+        <div id="wrapper">
+            <div id="page-wrapper">
+            {% include 'nav.html' %}
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="row">
+                    <div class="col-lg-12" style="padding-top:15px">
+                      {% for category, message in messages %}
+                        {% if category == 'message' %}
+                            {% set  category = 'warning' %}
+                        {% endif %}
+                          <div class="alert alert-{{category}}  alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            {{ message|safe }}
+                          </div>
+                      {% endfor %}
+                     </div>
+             </div>
+                {% endif %}
+            {% endwith %}
+
+
+            {%- block page -%}
+            {%- endblock page %} 
+            </div> <!-- /#page-wrapper -->
+        </div> <!-- /#wrapper -->
+    {% block scripts %}
+    <script src="{{'jquery.js'|find_resource}}"></script>
+    <script src="{{'bootstrap.js'|find_resource}}"></script>
+    <script src="{{'bootstrap-submenu.js'|find_resource}}"></script>
+    <script>$('[data-submenu]').submenupicker();</script>
+    {%- block page_scripts %}
+    {%- endblock page_scripts %}
+    {%- endblock scripts %}
+    {%- endblock body %}
+  </body>
+</html>

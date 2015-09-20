@@ -1,0 +1,30 @@
+<!-- 
+  vim: tabstop=2 expandtab shiftwidth=2 softtabstop=2:
+-->
+{% extends "base.html" %}
+
+{% block page %}
+<div class="container">
+    <div class="page-header">
+        <h3>Console report</h3>
+    </div>
+  <div class="table-responsive">
+   <table class="table">
+     <thead>
+        <tr>
+          <th>Item</th>
+          <th>Information</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for col, data in items.items() %}
+        <tr>
+          <td>{{col}}</td>
+          <td>{{data}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock page %}
+
