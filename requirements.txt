@@ -3,4 +3,5 @@ Flask-Login==0.3.0
 MySQL-python==1.2.5
 SQLAlchemy==1.0.8
 WTForms==2.0.2
+watchdog==0.8.3
 -e git+ssh://git@github.com/au-easyshare/es_sqla.git#egg=es_sqla-master

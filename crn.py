@@ -11,7 +11,8 @@ import jinja_local.jinja_filters
 
 import auth
 import home
-import errors
+import crn
+#import errors
 
 import misc
 
@@ -39,8 +40,9 @@ def create_app(options):
     misc.menu.init_app(app)
 
     app.register_blueprint(auth.auth)
-    app.register_blueprint(errors.errors)
-    app.register_blueprint(home.homebp)
+#    app.register_blueprint(errors.errors)
+    app.register_blueprint(home.homebp, url_prefix='/home')
+    app.register_blueprint(crn.crnbp, url_prefix='/crn')
 
 #    @app.route('/')
 #    def root():
