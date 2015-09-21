@@ -1,5 +1,6 @@
 import datetime
 import base64
+import urllib
 
 import requests
 
@@ -28,7 +29,10 @@ class NABCustMgmt:
         odict['EPS_TIMESTAMP'] = timestamp
         odict['EPS_ACTION'] = action
         odict['EPS_CRN'] = crn
+        odict['EPS_ALLOCATEDVARIABLE'] = "1234"
         try:
+            print "fprinter", current_app.mopts.fingerprinter
+            print "params", odict
             rr = requests.post(current_app.mopts.fingerprinter, params=odict)
         except Exception as ee:
             print "Exception in post", str(ee)
@@ -54,14 +58,16 @@ def requestsig():
     return render_template('cmtest.html', results=dict(signature=cmo.signature(timestamp=timestamp, action="ADDCRN", crn="John Citizen")))
 
 
-def crn_form(form, timestamp, action, fingerprint):
+def crn_form(form, timestamp, action, fingerprint, crn):
     return form(request.form,
                 EPS_MERCHANT=current_app.mopts.eps_merchant,
                 EPS_PASSWORD=current_app.mopts.eps_password,
                 EPS_TYPE='CRN',
                 EPS_TIMESTAMP=timestamp,
                 EPS_ACTION=action,
-                EPS_FINGERPRINT=fingerprint)
+                EPS_RESULTURL=current_app.mopts.eps_resulturl,
+                EPS_FINGERPRINT=urllib.quote_plus(fingerprint),
+                EPS_CRN=crn)
 
 
 @add_menu('CRN', 'enter CC', 'entercc', crnbp)
@@ -73,6 +79,16 @@ def entercc():
     else:
         cmo = NABCustMgmt()
         timestamp = cmo.timestamp()
-        fingerprint = cmo.signature(timestamp=timestamp, action="ADDCRN", crn="John Citizen")
-        addcc_form = crn_form(forms.CrnAddCCForm, timestamp, 'ADDCRN', fingerprint)
-    return render_template('entercc.html', crnpost=current_app.mopts.crnpost, form=addcc_form)
+        crn = "John Citizen"
+        action = 'addcrn'
+        fingerprint = cmo.signature(timestamp=timestamp, action=action, crn="John Citizen")
+        print "Fingerprint is", fingerprint
+        addcc_form = crn_form(forms.CrnAddCCForm, timestamp, action, fingerprint, crn="John Citizen")
+    return render_template('entercc.html', eps_post=current_app.mopts.eps_post, form=addcc_form)
+
+
+@crnbp.route('/acceptcc', methods=['POST'])
+@login_required
+def acceptcc():
+    from IPython import embed; embed()
+    return "<html>HELLO WORLD</html>"

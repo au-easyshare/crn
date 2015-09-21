@@ -86,7 +86,7 @@ if __name__ == '__main__':
     parser.add_option("-f", "--config", dest="config", default='settings.ini', help="config file")
     parser.add_option("-s", "--section", dest="section", default='beta', help="config file section")
     parser.add_option("-e", "--echo", dest="echo", action="store_true", default=False, help="echo sql")
-    parser.add_option("-p", "--port", dest="port", default=8080, type="int", help="Set listeding port")
+    parser.add_option("-p", "--port", dest="port", default=9000, type="int", help="Set listeding port")
     options, args = parser.parse_args()
     app = create_app(options)
     app.run(debug=True, port=options.port, host=host)
